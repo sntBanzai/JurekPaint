@@ -30,7 +30,9 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
 	private static Color zmieniony;
 	public static int doWycofek = 0;
 	static String doIkon = "coœtam"; 
-	public Line stworzona;
+	private static Batton2 wszystko;
+	private static Batton2 ostatni;
+	
 	
 	static ArrayList<Znacznik> zbiórZnaków = new ArrayList<Znacznik>();
 	
@@ -85,9 +87,9 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
 		kszt.add(doRamki);
 		doRamki.setLayout(new GridLayout(2,3));
 		JPanel funkcyjny = new JPanel();
-		Batton2 wszystko = new Batton2();
+		wszystko = new Batton2();
 		funkcyjny.add(wszystko);
-		Batton2 ostatni = new Batton2("ostatniego");
+		ostatni = new Batton2("ostatniego");
 		funkcyjny.add(ostatni);
 		funkcyjny.setBorder(BorderFactory.createTitledBorder("Klawisze funkcyjne"));
 		kszt.add(funkcyjny);
@@ -146,16 +148,8 @@ public class Panel extends JPanel implements MouseListener, MouseMotionListener{
 				JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
 			}
 		}	
-		else if(e.getButton()==MouseEvent.BUTTON3){
-			if(zbiórZnaków==null){
-				JOptionPane.showMessageDialog(null, "Nie mozna utworzyæ linii - brak punktu pocz¹tkowego");
-			}
-			else 
-				stworzona = new Line(zbiórZnaków.get(zbiórZnaków.size()-2),zbiórZnaków.get(zbiórZnaków.size()-1));
-				pêdzel.setColor(returnCurrentColor());
-				pêdzel.drawLine(zbiórZnaków.get(zbiórZnaków.size()-1).getX(), zbiórZnaków.get(zbiórZnaków.size()-1).getY(), e.getX(),e.getY());
-				repaint();
-		}
+		wszystko.validateEna();
+		ostatni.validateEna();
 	}
 	
 
@@ -268,15 +262,14 @@ class Batton2 extends JButton{
 		setMinimumSize(new Dimension(80,80));
 		setPreferredSize(new Dimension(80,80));
 		setMaximumSize(new Dimension(80,80));
-		if(Panel.zbiórZnaków==null)
-			setEnabled(false);
-		else
-			setEnabled(true);
-			addActionListener(new ActionListener(){
-				@Override
-				public void actionPerformed(ActionEvent e){
-					zbiórZnaków.clear();
-					repaint();
+		validateEna();
+		addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				zbiórZnaków.clear();
+				validateEna();
+				ostatni.validateEna();
+				Ramka.kartka.repaint();
 			}
 		});
 	}
@@ -285,18 +278,23 @@ class Batton2 extends JButton{
 		setMinimumSize(new Dimension(80,80));
 		setPreferredSize(new Dimension(80,80));
 		setMaximumSize(new Dimension(80,80));
-		if(Panel.zbiórZnaków==null)
-			setEnabled(false);
-		else
-			setEnabled(true);
-			addActionListener(new ActionListener(){
-				@Override
-				public void actionPerformed(ActionEvent e){
-					zbiórZnaków.remove(zbiórZnaków.size()-1);
-					repaint();
+		validateEna();
+		addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				zbiórZnaków.remove(zbiórZnaków.size()-1);
+				validateEna();
+				wszystko.validateEna();
+				Ramka.kartka.repaint();
 			}
 	});
 }
+	private void validateEna(){
+		if(zbiórZnaków.size()<=0)
+			setEnabled(false);
+		else
+			setEnabled(true);
+	}
 
 }
 }
