@@ -1,0 +1,305 @@
+import javax.swing.JButton;
+import javax.swing.JColorChooser;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.awt.event.*;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.event.MouseInputListener;
+
+
+public class Panel extends JPanel implements MouseListener, MouseMotionListener{
+
+	public static Graphics2D pêdzel;
+	public static Batton pierszy;
+	public static Batton drugi;
+	public static Batton trzeci;
+	public static Batton czwarty;
+	public static Batton pi¹ty;
+	public static Batton szósty;
+	private static JColorChooser czuzer;
+	private static Color zmieniony;
+	public static int doWycofek = 0;
+	static String doIkon = "coœtam"; 
+	public Line stworzona;
+	
+	static ArrayList<Znacznik> zbiórZnaków = new ArrayList<Znacznik>();
+	
+	public Panel(){
+		setLocation(0,0);
+		setSize(1500,800);
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		setForeground(Color.WHITE);
+		repaint();
+	
+	}
+	
+	public Panel(String wyrko){
+		setLocation(0,800);
+		setSize(1500,200);
+		setForeground(Color.lightGray);
+		Container kszt = new Container();
+		GridBagLayout gbl = new GridBagLayout();
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.EAST;
+		czuzer = new JColorChooser();
+		czuzer.getSelectionModel().addChangeListener(new ChEv());
+		this.add(czuzer);
+		JPanel doRamki = new JPanel();
+		ButtonGroup kszt2 = new ButtonGroup();
+		pierszy = new Batton(Kszta³tyRozmiary.KO£ODU¯E);
+		pierszy.putClientProperty(doIkon, 1);
+		kszt2.add(pierszy);
+		doRamki.add(pierszy);
+		drugi = new Batton(Kszta³tyRozmiary.KO£OŒREDNIE);
+		drugi.putClientProperty(doIkon, 2);
+		kszt2.add(drugi);
+		doRamki.add(drugi);
+		trzeci = new Batton(Kszta³tyRozmiary.KO£OMA£E);
+		trzeci.putClientProperty(doIkon, 3);
+		kszt2.add(trzeci);
+		doRamki.add(trzeci);
+		czwarty = new Batton(Kszta³tyRozmiary.KWADRATDU¯Y);
+		czwarty.putClientProperty(doIkon, 4);
+		kszt2.add(czwarty);
+		doRamki.add(czwarty);
+		pi¹ty = new Batton(Kszta³tyRozmiary.KWADRATŒREDNI);
+		pi¹ty.putClientProperty(doIkon, 5);
+		kszt2.add(pi¹ty);
+		doRamki.add(pi¹ty);
+		szósty = new Batton(Kszta³tyRozmiary.KWADRATMA£Y);
+		szósty.putClientProperty(doIkon, 6);
+		kszt2.add(szósty);
+		doRamki.add(szósty);
+		doRamki.setBorder(BorderFactory.createTitledBorder("Wybór kszta³tu"));
+		kszt.add(doRamki);
+		doRamki.setLayout(new GridLayout(2,3));
+		JPanel funkcyjny = new JPanel();
+		Batton2 wszystko = new Batton2();
+		funkcyjny.add(wszystko);
+		Batton2 ostatni = new Batton2("ostatniego");
+		funkcyjny.add(ostatni);
+		funkcyjny.setBorder(BorderFactory.createTitledBorder("Klawisze funkcyjne"));
+		kszt.add(funkcyjny);
+		kszt.setLayout(new GridLayout(1,0));
+		this.add(kszt);
+		setLayout(gbl);
+	}
+	
+	@Override
+	public void mouseEntered(MouseEvent e){
+	}
+	@Override
+	public void mouseExited(MouseEvent e){
+	}
+	@Override
+	public void mousePressed(MouseEvent e){
+	}
+	@Override
+	public void mouseClicked(MouseEvent e){
+	}
+	@Override
+	public void mouseReleased(MouseEvent e){
+		if(e.getButton()==MouseEvent.BUTTON1){
+			switch(Batton.aktivBatton){
+			case 1:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 2:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 3:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 4:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 5:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 6:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			default:
+				JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
+			}
+		}	
+		else if(e.getButton()==MouseEvent.BUTTON3){
+			if(zbiórZnaków==null){
+				JOptionPane.showMessageDialog(null, "Nie mozna utworzyæ linii - brak punktu pocz¹tkowego");
+			}
+			else 
+				stworzona = new Line(zbiórZnaków.get(zbiórZnaków.size()-2),zbiórZnaków.get(zbiórZnaków.size()-1));
+				pêdzel.setColor(returnCurrentColor());
+				pêdzel.drawLine(zbiórZnaków.get(zbiórZnaków.size()-1).getX(), zbiórZnaków.get(zbiórZnaków.size()-1).getY(), e.getX(),e.getY());
+				repaint();
+		}
+	}
+	
+
+	@Override
+	public void mouseDragged(MouseEvent me){
+		if(me.getButton()==MouseEvent.BUTTON1){
+			switch(Batton.aktivBatton){
+			case 1:
+				zbiórZnaków.add(new Znacznik(me.getX(),me.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 2:
+				zbiórZnaków.add(new Znacznik(me.getX(),me.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 3:
+				zbiórZnaków.add(new Znacznik(me.getX(),me.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 4:
+				zbiórZnaków.add(new Znacznik(me.getX(),me.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 5:
+				zbiórZnaków.add(new Znacznik(me.getX(),me.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			case 6:
+				zbiórZnaków.add(new Znacznik(me.getX(),me.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
+				repaint();
+				System.out.println(zbiórZnaków.get(zbiórZnaków.size()-1));
+			break;
+			default:
+				JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
+			}
+		}
+	}
+	@Override 
+	public void mouseMoved(MouseEvent me){	
+	}
+	
+	public Color returnCurrentColor(){
+		return zmieniony;
+	}
+	
+	@Override
+	protected void paintComponent(Graphics g){
+		super.paintComponent(g);
+		pêdzel = (Graphics2D) g;
+		rysujKartê(pêdzel);
+		rysujKszta³t(pêdzel);
+	}
+	
+	public void rysujKartê(Graphics2D pêdzel){
+		pêdzel.fillRect(0, 0, this.getWidth(), this.getHeight());
+	}
+	
+	public static void rysujKszta³t(Graphics2D pêdzel){
+			for(Znacznik z : zbiórZnaków){
+					int x = (int) z.getX();
+					int y = (int) z.getY();
+					switch(z.k){
+					case KO£ODU¯E:
+						pêdzel.setColor(z.getColor());
+						pêdzel.fillOval(x, y, 15, 15);
+						break;
+					case KO£OŒREDNIE:
+						pêdzel.setColor(z.getColor());
+						pêdzel.fillOval(x, y, 10, 10);
+						break;
+					case KO£OMA£E:
+						pêdzel.setColor(z.getColor());
+						pêdzel.fillOval(x, y, 5, 5);
+						break;
+					case KWADRATDU¯Y:
+						pêdzel.setColor(z.getColor());
+						pêdzel.fillRect(x, y, 15, 15);
+						break;
+					case KWADRATŒREDNI:
+						pêdzel.setColor(z.getColor());
+						pêdzel.fillRect(x, y, 10, 10);
+						break;
+					case KWADRATMA£Y:
+						pêdzel.setColor(z.getColor());
+						pêdzel.fillRect(x, y, 5, 5);
+						break;
+					default:
+						JOptionPane.showMessageDialog(null, "Coœ nie zagra³o w metodzie rysujKsza³t");
+				}
+			}
+		}
+	
+	
+class ChEv implements ChangeListener{
+	@Override
+	public void stateChanged(ChangeEvent ch){
+		zmieniony = czuzer.getColor();
+		System.out.println(zmieniony);
+		}
+	}
+
+class Batton2 extends JButton{
+	public Batton2(){
+		super("<html><center><b><font color=red>Wyczyœæ<br>ca³¹<br>kartê</font></b></center></html>");
+		setMinimumSize(new Dimension(80,80));
+		setPreferredSize(new Dimension(80,80));
+		setMaximumSize(new Dimension(80,80));
+		if(Panel.zbiórZnaków==null)
+			setEnabled(false);
+		else
+			setEnabled(true);
+			addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e){
+					zbiórZnaków.clear();
+					repaint();
+			}
+		});
+	}
+	public Batton2(String str){
+		super("<html><center><b><font color=red>Cofnij<br>ostatni<br>znak</font></b></center></html>");
+		setMinimumSize(new Dimension(80,80));
+		setPreferredSize(new Dimension(80,80));
+		setMaximumSize(new Dimension(80,80));
+		if(Panel.zbiórZnaków==null)
+			setEnabled(false);
+		else
+			setEnabled(true);
+			addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e){
+					zbiórZnaków.remove(zbiórZnaków.size()-1);
+					repaint();
+			}
+	});
+}
+
+}
+}
+
+
+

@@ -1,0 +1,4 @@
+
+public enum Kszta³tyRozmiary {
+	KO£OMA£E,KO£OŒREDNIE,KO£ODU¯E,KWADRATMA£Y,KWADRATŒREDNI,KWADRATDU¯Y
+}
