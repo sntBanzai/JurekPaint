@@ -3,10 +3,12 @@ import java.awt.event.*;
 
 public class Executive {
 
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable(){
 			@Override public void run(){
-				new Ramka();
+				Ramka r = new Ramka();
+				r.setJMenuBar(Ramka.menuBar);
 			}
 		});
 
