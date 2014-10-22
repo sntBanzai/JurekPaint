@@ -44,9 +44,7 @@ public class Panel extends JPanel{
 		setSize(1500,800);
 		addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(MouseEvent e){
-				System.out.println("mousePressed fired!");
-				System.out.println(e.getButton());
+			public void mouseClicked(MouseEvent e){
 				if(e.getButton()==MouseEvent.BUTTON1){
 					switch(Batton.aktivBatton){
 					case 1:
@@ -84,9 +82,9 @@ public class Panel extends JPanel{
 		addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e){
-				System.out.println("mouseDragged fired!");
-				System.out.println(e.getButton());
-				if(e.getButton()==MouseEvent.NOBUTTON){
+				int b1 = MouseEvent.BUTTON1_DOWN_MASK;
+				int b2 = MouseEvent.BUTTON2_DOWN_MASK;
+				if ((e.getModifiersEx() & (b1 | b2)) == b1) {
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
