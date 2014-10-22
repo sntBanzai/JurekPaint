@@ -82,9 +82,7 @@ public class Panel extends JPanel{
 		addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e){
-				int b1 = MouseEvent.BUTTON1_DOWN_MASK;
-				int b2 = MouseEvent.BUTTON2_DOWN_MASK;
-				if ((e.getModifiersEx() & (b1 | b2)) == b1) {
+				if (SwingUtilities.isLeftMouseButton(e)) {
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
