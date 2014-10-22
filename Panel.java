@@ -196,8 +196,8 @@ public class Panel extends JPanel{
 	
 	public static void rysujKszta³t(Graphics2D pêdzel){
 			for(Znacznik z : zbiórZnaków){
-					int x = (int) z.getX();
-					int y = (int) z.getY();
+					int x = (int) z.getX()-5;
+					int y = (int) z.getY()-5;
 					switch(z.k){
 					case KO£ODU¯E:
 						pêdzel.setColor(z.getColor());
