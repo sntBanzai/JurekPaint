@@ -15,6 +15,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
@@ -34,6 +35,7 @@ public class Panel extends JPanel{
 	static String doIkon = "coœtam"; 
 	private static Batton2 wszystko;
 	private static Batton2 ostatni;
+	private static Batton2 gumka;
 	
 	
 	
@@ -166,6 +168,8 @@ public class Panel extends JPanel{
 		funkcyjny.add(wszystko);
 		ostatni = new Batton2("ostatniego");
 		funkcyjny.add(ostatni);
+		gumka = new Batton2(false);
+		funkcyjny.add(gumka);
 		funkcyjny.setBorder(BorderFactory.createTitledBorder("Klawisze funkcyjne"));
 		kszt.add(funkcyjny);
 		kszt.setLayout(new GridLayout(1,0));
@@ -235,6 +239,9 @@ class ChEv implements ChangeListener{
 	}
 
 class Batton2 extends JButton{
+	
+	boolean checkIfActive;
+	
 	public Batton2(){
 		super("<html><center><b><font color=red>Wyczyœæ<br>ca³¹<br>kartê</font></b></center></html>");
 		setMinimumSize(new Dimension(80,80));
@@ -267,6 +274,32 @@ class Batton2 extends JButton{
 			}
 	});
 }
+	public Batton2(boolean b){
+		super("<html><center><b><font color=red>Wyma¿</font></b></center></html>");
+		setMinimumSize(new Dimension(80,80));
+		setPreferredSize(new Dimension(80,80));
+		setMaximumSize(new Dimension(80,80));
+		checkIfActive = b;
+		addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				if(checkIfActive==false){
+					zmieniony = new Color(255,255,255);
+					checkIfActive=true;
+					gumka.setBackground(Color.YELLOW);
+					gumka.repaint();
+				}
+				else{
+					zmieniony = czuzer.getColor();
+					checkIfActive = false;
+					Color doZmiany = wszystko.getBackground();
+					gumka.setBackground(doZmiany);
+					gumka.repaint();
+				}
+			}
+	});
+}
+	
 	private void validateEna(){
 		if(zbiórZnaków.size()<=0)
 			setEnabled(false);
