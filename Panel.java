@@ -51,27 +51,27 @@ public class Panel extends JPanel{
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint(e.getX(),e.getY(),e.getX()+40,e.getY()+40);
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint(e.getX(),e.getY(),e.getX()+40,e.getY()+40);
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint(e.getX(),e.getY(),e.getX()+40,e.getY()+40);
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint(e.getX(),e.getY(),e.getX()+40,e.getY()+40);
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 5:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint(e.getX(),e.getY(),e.getX()+40,e.getY()+40);
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 6:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint(e.getX(),e.getY(),e.getX()+40,e.getY()+40);
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					default:
 						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
@@ -88,27 +88,27 @@ public class Panel extends JPanel{
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint();
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint();
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint();
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint();
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 5:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint();
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					case 6:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint();
+						repaint(e.getX()-10,e.getY()-10,e.getX()+40,e.getY()+40);
 					break;
 					default:
 						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
