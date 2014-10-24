@@ -1,10 +1,12 @@
 import javax.swing.BorderFactory;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.event.MenuEvent;
 import javax.swing.event.MenuListener;
@@ -70,26 +72,19 @@ public class Ramka extends JFrame {
 		menuBar.add(plik);
 		JMenu info = new JMenu("Informacje");
 		info.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-		info.addMenuListener(new MenuListener(){
+		JMenuItem oProg = new JMenuItem("O programie");
+		oProg.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+		oProg.addActionListener(new ActionListener(){
 			@Override
-			public void menuSelected(MenuEvent me){
-				JFrame infoW = new JFrame("Informacje o programie");
-				infoW.setMaximumSize(new Dimension(500, 300));
-				infoW.setMinimumSize(new Dimension(500, 300));
-				infoW.setPreferredSize(new Dimension(500, 300));
-				infoW.setLocation((Executive.r.getWidth()/2)-250, (Executive.r.getHeight()/2)-150);
-				infoW.setResizable(false);
-				infoW.setEnabled(true);
-				infoW.setAlwaysOnTop(true);
-				infoW.setVisible(true);
-				setGlassPane(kartka);
-				setGlassPane(odMenusów);
-			}
-			public void menuDeselected(MenuEvent me){
-			}
-			public void menuCanceled(MenuEvent me){
+			public void actionPerformed(ActionEvent ae){
+				JOptionPane.showMessageDialog(kartka, "Program stworzony w ramach æwiczenia umiejêtnoœci w Java"
+						+ " Swing przez Jerzego Ma³yszko \n"
+						+"\t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t \t"
+						+" jerzy.malyszko@wp.pl", "Informacje o programie", JOptionPane.INFORMATION_MESSAGE);
+				
 			}
 		});
+		info.add(oProg);
 		menuBar.add(info);
 		menuBar.setVisible(true);
 		uk³ad.add(menuBar);
