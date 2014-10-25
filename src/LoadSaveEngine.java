@@ -31,6 +31,7 @@ public class LoadSaveEngine {
 			e.printStackTrace();
 		}
 		where.getGraphics().drawImage((Image) internal, 0, 0, null);
+		where.zbiórZnaków.clear();
 	}
 	
 	public void writeAndSave(Panel what, File where, String ext){

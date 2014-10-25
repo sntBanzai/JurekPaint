@@ -10,6 +10,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Set;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -51,27 +52,27 @@ public class Panel extends JPanel{
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+15,e.getY()+15);
+						repaint(e.getX()-5,e.getY()-5,15,15);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+10,e.getY()+10);
+						repaint(e.getX()-5,e.getY()-5,10,10);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+5,e.getY()+5);
+						repaint(e.getX()-5,e.getY()-5,5,5);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+15,e.getY()+15);
+						repaint(e.getX()-5,e.getY()-5,15,15);
 					break;
 					case 5:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+10,e.getY()+10);
+						repaint(e.getX()-5,e.getY()-5,10,10);
 					break;
 					case 6:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+5,e.getY()+5);
+						repaint(e.getX()-5,e.getY()-5,5,5);
 					break;
 					default:
 						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
@@ -88,27 +89,27 @@ public class Panel extends JPanel{
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+15,e.getY()+15);
+						repaint(e.getX()-5,e.getY()-5,15,15);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+10,e.getY()+10);
+						repaint(e.getX()-5,e.getY()-5,10,10);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+5,e.getY()+5);
+						repaint(e.getX()-5,e.getY()-5,5,5);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+15,e.getY()+15);
+						repaint(e.getX()-5,e.getY()-5,15,15);
 					break;
 					case 5:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+10,e.getY()+10);
+						repaint(e.getX()-5,e.getY()-5,10,10);
 					break;
 					case 6:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,e.getX()+5,e.getY()+5);
+						repaint(e.getX()-5,e.getY()-5,5,5);
 					break;
 					default:
 						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
@@ -233,6 +234,10 @@ public class Panel extends JPanel{
 class ChEv implements ChangeListener{
 	@Override
 	public void stateChanged(ChangeEvent ch){
+		if(gumka.checkIfActive==true){
+			gumka.checkIfActive = false;
+			gumka.setBackground(wszystko.getBackground());
+		}
 		zmieniony = czuzer.getColor();
 		System.out.println(zmieniony);
 		}
@@ -267,10 +272,33 @@ class Batton2 extends JButton{
 		addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
+				Znacznik z = zbiórZnaków.get(zbiórZnaków.size()-1);
 				zbiórZnaków.remove(zbiórZnaków.size()-1);
 				validateEna();
 				wszystko.validateEna();
-				Ramka.kartka.repaint();
+				switch(z.getShape()){
+					case KWADRATDU¯Y:
+						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,15,15);
+						break;
+					case KWADRATŒREDNI:
+						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,10,10);
+						break;
+					case KWADRATMA£Y:
+						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,5,5);
+						break;
+					case KO£ODU¯E:
+						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,15,15);
+						break;
+					case KO£OŒREDNIE:
+						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,10,10);
+						break;
+					case KO£OMA£E:
+						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,5,5);
+						break;
+					default:
+						System.out.println("What the fook?");
+				}
+				
 			}
 	});
 }
