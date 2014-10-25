@@ -1,23 +1,22 @@
 import javax.swing.BorderFactory;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+
+import javax.swing.filechooser.*;
+import javax.swing.*;
 
 
 public class Ramka extends JFrame {
@@ -43,7 +42,11 @@ public class Ramka extends JFrame {
 			public void actionPerformed(ActionEvent ae){
 				jfc.setFileFilter(filter);
 				jfc.setDialogTitle("Otwórz plik graficzny");
-				jfc.showOpenDialog(Ramka.this);
+				int returnV = jfc.showOpenDialog(Ramka.this);
+				if(returnV == jfc.APPROVE_OPTION){
+					LoadSaveEngine lse = new LoadSaveEngine(jfc.getSelectedFile());
+					lse.loadAndShow(kartka);
+				}
 			}
 		});
 		JMenuItem save = new JMenuItem("Zapisz");
@@ -53,7 +56,13 @@ public class Ramka extends JFrame {
 			public void actionPerformed(ActionEvent ae){
 				jfc.setFileFilter(filter);
 				jfc.setDialogTitle("Zapisz swoje dzie³o");
-				jfc.showSaveDialog(Ramka.this);
+				int returnV = jfc.showSaveDialog(Ramka.this);
+				if(returnV==jfc.APPROVE_OPTION){
+					LoadSaveEngine lse = new LoadSaveEngine(new BufferedImage(kartka.getWidth(),kartka.getHeight(),BufferedImage.TYPE_INT_RGB));
+					File selected = jfc.getSelectedFile();
+					String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
+					lse.writeAndSave(kartka, selected, ext);
+				}
 			}
 		});
 		JMenuItem close = new JMenuItem("Zamknij");
