@@ -58,7 +58,7 @@ public class Ramka extends JFrame {
 				jfc.setDialogTitle("Zapisz swoje dzie³o");
 				int returnV = jfc.showSaveDialog(Ramka.this);
 				if(returnV==jfc.APPROVE_OPTION){
-					LoadSaveEngine lse = new LoadSaveEngine(kartka.loaded);
+					LoadSaveEngine lse = new LoadSaveEngine(new BufferedImage(Ramka.kartka.getWidth(), Ramka.kartka.getHeight(), BufferedImage.TYPE_INT_RGB));
 					File selected = jfc.getSelectedFile();
 					String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
 					lse.writeAndSave(kartka, selected, ext);

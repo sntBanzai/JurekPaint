@@ -58,15 +58,15 @@ public class Panel extends JPanel{
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						pêdzel.fillOval(e.getX()-5, e.getY()-5, 15, 15);
+						repaint(e.getX()-5, e.getY()-5, 15, 15);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						pêdzel.fillOval(e.getX()-5, e.getY()-5, 10, 10);
+						repaint(e.getX()-5, e.getY()-5, 10, 10);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						pêdzel.fillOval(e.getX()-5, e.getY()-5, 5, 5);
+						repaint(e.getX()-5, e.getY()-5, 5, 5);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
@@ -100,15 +100,15 @@ public class Panel extends JPanel{
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						pêdzel.fillOval(e.getX()-5, e.getY()-5, 15, 15);
+						repaint(e.getX()-5, e.getY()-5, 15, 15);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						pêdzel.fillOval(e.getX()-5, e.getY()-5, 10, 10);
+						repaint(e.getX()-5, e.getY()-5, 10, 10);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						pêdzel.fillOval(e.getX()-5, e.getY()-5, 5, 5);
+						repaint(e.getX()-5, e.getY()-5, 5, 5);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
@@ -195,7 +195,7 @@ public class Panel extends JPanel{
         super.paintComponent( g );
         pêdzel = (Graphics2D) g;
         rysujKartê(pêdzel);
-        if(loaded!=null) rysujWczytany(pêdzel);
+        if(loaded!=null){ rysujWczytany(pêdzel);}
         pêdzel.setComposite(ac);
         rysujKszta³t(pêdzel);  
 	}
@@ -278,6 +278,7 @@ class Batton2 extends JButton{
 				zbiórZnaków.clear();
 				validateEna();
 				ostatni.validateEna();
+				loaded = null;
 				Ramka.kartka.repaint();
 			}
 		});
