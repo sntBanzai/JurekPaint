@@ -1,3 +1,4 @@
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -30,7 +31,8 @@ public class LoadSaveEngine {
 			System.out.println("Du¿y problem z metod¹ write and save");
 			e.printStackTrace();
 		}
-		where.getGraphics().drawImage((Image) internal, 0, 0, null);
+		where.loaded = internal;
+		where.repaint();
 		where.zbiórZnaków.clear();
 	}
 	

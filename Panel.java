@@ -19,6 +19,7 @@ import javax.swing.event.ChangeListener;
 
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 
 
 public class Panel extends JPanel{
@@ -37,8 +38,8 @@ public class Panel extends JPanel{
 	private static Batton2 wszystko;
 	private static Batton2 ostatni;
 	private static Batton2 gumka;
-	
-	
+	public static BufferedImage loaded;
+	static AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
 	
 	static ArrayList<Znacznik> zbiórZnaków = new ArrayList<Znacznik>();
 	
@@ -48,31 +49,36 @@ public class Panel extends JPanel{
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e){
+				if(loaded!=null){
+					rysujWczytany(pêdzel);
+					repaint();
+					pêdzel.setComposite(ac);
+				}
 				if(e.getButton()==MouseEvent.BUTTON1){
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,15,15);
+						pêdzel.fillOval(e.getX()-5, e.getY()-5, 15, 15);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,10,10);
+						pêdzel.fillOval(e.getX()-5, e.getY()-5, 10, 10);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,5,5);
+						pêdzel.fillOval(e.getX()-5, e.getY()-5, 5, 5);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,15,15);
+						repaint(e.getX()-5, e.getY()-5, 15, 15);
 					break;
 					case 5:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,10,10);
+						repaint(e.getX()-5, e.getY()-5, 10, 10);
 					break;
 					case 6:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,5,5);
+						repaint(e.getX()-5, e.getY()-5, 5, 5);
 					break;
 					default:
 						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
@@ -85,31 +91,36 @@ public class Panel extends JPanel{
 		addMouseMotionListener(new MouseAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e){
+				if(loaded!=null){
+					rysujWczytany(pêdzel);
+					repaint();
+					pêdzel.setComposite(ac);
+				}
 				if (SwingUtilities.isLeftMouseButton(e)) {
 					switch(Batton.aktivBatton){
 					case 1:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,15,15);
+						pêdzel.fillOval(e.getX()-5, e.getY()-5, 15, 15);
 					break;
 					case 2:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,10,10);
+						pêdzel.fillOval(e.getX()-5, e.getY()-5, 10, 10);
 					break;
 					case 3:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,5,5);
+						pêdzel.fillOval(e.getX()-5, e.getY()-5, 5, 5);
 					break;
 					case 4:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,15,15);
+						repaint(e.getX()-5, e.getY()-5, 15, 15);
 					break;
 					case 5:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,10,10);
+						repaint(e.getX()-5, e.getY()-5, 10, 10);
 					break;
 					case 6:
 						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint(e.getX()-5,e.getY()-5,5,5);
+						repaint(e.getX()-5, e.getY()-5, 5, 5);
 					break;
 					default:
 						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
@@ -121,7 +132,6 @@ public class Panel extends JPanel{
 		});
 		setForeground(Color.WHITE);
 		repaint();
-	
 	}
 	
 	public Panel(String wyrko){
@@ -176,6 +186,18 @@ public class Panel extends JPanel{
 		kszt.setLayout(new GridLayout(1,0));
 		this.add(kszt);
 		setLayout(gbl);
+		this.setForeground(Color.LIGHT_GRAY);
+		repaint();
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+        super.paintComponent( g );
+        pêdzel = (Graphics2D) g;
+        rysujKartê(pêdzel);
+        if(loaded!=null) rysujWczytany(pêdzel);
+        pêdzel.setComposite(ac);
+        rysujKszta³t(pêdzel);  
 	}
 	
 
@@ -183,19 +205,16 @@ public class Panel extends JPanel{
 		return zmieniony;
 	}
 		
-	@Override
-	protected void paintComponent(Graphics g){
-		super.paintComponent(g);
-		pêdzel = (Graphics2D) g;
-		rysujKartê(pêdzel);
-		rysujKszta³t(pêdzel);
+
+	public void rysujWczytany(Graphics2D pêdzel){
+		pêdzel.drawImage(loaded, 0, 0, null);
 	}
 	
 	public void rysujKartê(Graphics2D pêdzel){
 		pêdzel.fillRect(0, 0, this.getWidth(), this.getHeight());
 	}
 	
-	public static void rysujKszta³t(Graphics2D pêdzel){
+	public void rysujKszta³t(Graphics2D pêdzel){
 			for(Znacznik z : zbiórZnaków){
 					int x = (int) z.getX()-5;
 					int y = (int) z.getY()-5;

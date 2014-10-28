@@ -1,6 +1,8 @@
 import java.awt.Color;
 
-public class Znacznik {
+import javax.swing.JComponent;
+
+public class Znacznik extends JComponent {
 	
 	private int x;
 	private int y;
