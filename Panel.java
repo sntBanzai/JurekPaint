@@ -210,6 +210,7 @@ public class Panel extends JPanel implements Printable{
 		else{
 			Graphics2D g2d = (Graphics2D)g;
 	        g2d.translate(pf.getImageableX(), pf.getImageableY());
+	        g2d.scale(pf.getImageableWidth()/Ramka.kartka.getWidth(),pf.getImageableHeight()/Ramka.kartka.getHeight());
 			this.paintAll(g);
 			return PAGE_EXISTS;
 		}

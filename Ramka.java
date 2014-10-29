@@ -66,6 +66,7 @@ public class Ramka extends JFrame {
 			public void actionPerformed(ActionEvent e){
 				PrinterJob ludek = PrinterJob.getPrinterJob();
 				ludek.setPrintable(kartka);
+				ludek.pageDialog(ludek.defaultPage());
 				if(ludek.printDialog()){
 					try{
 						ludek.print();
