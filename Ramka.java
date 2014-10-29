@@ -13,6 +13,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 
 import javax.swing.filechooser.*;
@@ -54,14 +56,24 @@ public class Ramka extends JFrame {
 		save.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ae){
-				jfc.setFileFilter(filter);
-				jfc.setDialogTitle("Zapisz swoje dzie³o");
-				int returnV = jfc.showSaveDialog(Ramka.this);
-				if(returnV==jfc.APPROVE_OPTION){
-					LoadSaveEngine lse = new LoadSaveEngine(new BufferedImage(Ramka.kartka.getWidth(), Ramka.kartka.getHeight(), BufferedImage.TYPE_INT_RGB));
-					File selected = jfc.getSelectedFile();
-					String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
-					lse.writeAndSave(kartka, selected, ext);
+				savingProcess();
+			}
+		});
+		JMenuItem print = new JMenuItem("Drukuj");
+		print.setBorder(BorderFactory.createEmptyBorder(10,5,10,5));
+		print.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				PrinterJob ludek = PrinterJob.getPrinterJob();
+				ludek.setPrintable(kartka);
+				if(ludek.printDialog()){
+					try{
+						ludek.print();
+					}
+					catch(PrinterException pe){
+						System.out.println("Coœ nie posz³o z drukowaniem");
+						pe.printStackTrace();
+					}
 				}
 			}
 		});
@@ -76,6 +88,7 @@ public class Ramka extends JFrame {
 		});
 		plik.add(open);
 		plik.add(save);
+		plik.add(print);
 		plik.add(new JSeparator(JSeparator.HORIZONTAL));
 		plik.add(close);
 		menuBar.add(plik);
@@ -107,5 +120,28 @@ public class Ramka extends JFrame {
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
-
+	
+	public void savingProcess(){
+		jfc.setFileFilter(filter);
+		jfc.setDialogTitle("Zapisz swoje dzie³o");
+		int returnV = jfc.showSaveDialog(Ramka.this);
+		if(returnV==jfc.APPROVE_OPTION){
+			LoadSaveEngine lse = new LoadSaveEngine(new BufferedImage(Ramka.kartka.getWidth(), Ramka.kartka.getHeight(), BufferedImage.TYPE_INT_RGB));
+			File selected = jfc.getSelectedFile();
+			String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
+			if(jfc.getSelectedFile().exists()){
+				String[] options = {"Tak, kurna","Nie kcem!"};
+				int  result = JOptionPane.showOptionDialog(jfc, "Niniejszy plik ju¿ istnieje. Czy chcesz go nadpisaæ?", "Agawu", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, null);
+				if(result==JOptionPane.YES_OPTION){
+					lse.writeAndSave(kartka, selected, ext);
+				}
+				else{
+				savingProcess();
+			}
+		}
+		else{
+		lse.writeAndSave(kartka, selected, ext);
+		}
+	}
+	}
 }

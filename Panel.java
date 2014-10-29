@@ -20,9 +20,11 @@ import javax.swing.event.ChangeListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
 
 
-public class Panel extends JPanel{
+public class Panel extends JPanel implements Printable{
 
 	public static Graphics2D pêdzel;
 	public static Batton pierszy;
@@ -200,6 +202,18 @@ public class Panel extends JPanel{
         rysujKszta³t(pêdzel);  
 	}
 	
+	@Override
+	public int print(Graphics g, PageFormat pf, int pageNo){
+		if(pageNo>0){
+			return NO_SUCH_PAGE;
+		}
+		else{
+			Graphics2D g2d = (Graphics2D)g;
+	        g2d.translate(pf.getImageableX(), pf.getImageableY());
+			this.paintAll(g);
+			return PAGE_EXISTS;
+		}
+	}
 
 	public Color returnCurrentColor(){
 		return zmieniony;
