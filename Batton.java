@@ -28,22 +28,22 @@ public class Batton extends JToggleButton implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e){
-		if(e.getSource() == Panel.pierszy){
+		if(e.getSource() == Panel2.pierszy){
 			aktivBatton = 1;
 		}
-		else if((e.getSource() == Panel.drugi)){
+		else if((e.getSource() == Panel2.drugi)){
 			aktivBatton = 2;
 		}
-		else if((e.getSource() == Panel.trzeci)){
+		else if((e.getSource() == Panel2.trzeci)){
 			aktivBatton = 3;
 		}
-		else if((e.getSource() == Panel.czwarty)){
+		else if((e.getSource() == Panel2.czwarty)){
 			aktivBatton = 4;
 		}
-		else if((e.getSource() == Panel.pi¹ty)){
+		else if((e.getSource() == Panel2.pi¹ty)){
 			aktivBatton = 5;
 		}
-		else if((e.getSource() == Panel.szósty)){
+		else if((e.getSource() == Panel2.szósty)){
 			aktivBatton = 6;
 		}
 	}
@@ -70,7 +70,7 @@ class Ikona implements Icon{
 		int h = transit.getHeight()/2;
 		int w = transit.getWidth()/2;
 		g.setColor(Color.BLACK);
-		switch((int) transit.getClientProperty(Panel.doIkon)){
+		switch((int) transit.getClientProperty(Panel2.doIkon)){
 		case 1:
 			x = w-7;
 			y = h-7;

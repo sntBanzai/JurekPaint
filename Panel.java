@@ -24,173 +24,25 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 
 
-public class Panel extends JPanel implements Printable{
+public class Panel extends JPanel implements Printable, MouseListener, MouseMotionListener{
 
 	public static Graphics2D pêdzel;
-	public static Batton pierszy;
-	public static Batton drugi;
-	public static Batton trzeci;
-	public static Batton czwarty;
-	public static Batton pi¹ty;
-	public static Batton szósty;
-	private static JColorChooser czuzer;
-	private static Color zmieniony;
-	public static int doWycofek = 0;
-	static String doIkon = "coœtam"; 
-	private static Batton2 wszystko;
-	private static Batton2 ostatni;
-	private static Batton2 gumka;
 	public static BufferedImage loaded;
 	static AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
+	boolean isDragged = false;
+	int iters = 0;
 	
 	static ArrayList<Znacznik> zbiórZnaków = new ArrayList<Znacznik>();
 	
 	public Panel(){
 		setLocation(0,0);
-		setSize(1500,800);
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e){
-				if(loaded!=null){
-					rysujWczytany(pêdzel);
-					repaint();
-					pêdzel.setComposite(ac);
-				}
-				if(e.getButton()==MouseEvent.BUTTON1){
-					switch(Batton.aktivBatton){
-					case 1:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 15, 15);
-					break;
-					case 2:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 10, 10);
-					break;
-					case 3:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 5, 5);
-					break;
-					case 4:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 15, 15);
-					break;
-					case 5:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 10, 10);
-					break;
-					case 6:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 5, 5);
-					break;
-					default:
-						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
-					}
-				}	
-				wszystko.validateEna();
-				ostatni.validateEna();
-			}
-		});
-		addMouseMotionListener(new MouseAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e){
-				if(loaded!=null){
-					rysujWczytany(pêdzel);
-					repaint();
-					pêdzel.setComposite(ac);
-				}
-				if (SwingUtilities.isLeftMouseButton(e)) {
-					switch(Batton.aktivBatton){
-					case 1:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 15, 15);
-					break;
-					case 2:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 10, 10);
-					break;
-					case 3:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 5, 5);
-					break;
-					case 4:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 15, 15);
-					break;
-					case 5:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 10, 10);
-					break;
-					case 6:
-						zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
-						repaint(e.getX()-5, e.getY()-5, 5, 5);
-					break;
-					default:
-						JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
-					}
-					wszystko.validateEna();
-					ostatni.validateEna();
-				}
-			}
-		});
+		addMouseListener(this);
+		addMouseMotionListener(this);
 		setForeground(Color.WHITE);
 		repaint();
 	}
 	
-	public Panel(String wyrko){
-		setLocation(0,800);
-		setSize(1500,200);
-		setForeground(Color.lightGray);
-		Container kszt = new Container();
-		GridBagLayout gbl = new GridBagLayout();
-		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.fill = GridBagConstraints.EAST;
-		czuzer = new JColorChooser();
-		czuzer.getSelectionModel().addChangeListener(new ChEv());
-		this.add(czuzer);
-		JPanel doRamki = new JPanel();
-		ButtonGroup kszt2 = new ButtonGroup();
-		pierszy = new Batton(Kszta³tyRozmiary.KO£ODU¯E);
-		pierszy.putClientProperty(doIkon, 1);
-		kszt2.add(pierszy);
-		doRamki.add(pierszy);
-		drugi = new Batton(Kszta³tyRozmiary.KO£OŒREDNIE);
-		drugi.putClientProperty(doIkon, 2);
-		kszt2.add(drugi);
-		doRamki.add(drugi);
-		trzeci = new Batton(Kszta³tyRozmiary.KO£OMA£E);
-		trzeci.putClientProperty(doIkon, 3);
-		kszt2.add(trzeci);
-		doRamki.add(trzeci);
-		czwarty = new Batton(Kszta³tyRozmiary.KWADRATDU¯Y);
-		czwarty.putClientProperty(doIkon, 4);
-		kszt2.add(czwarty);
-		doRamki.add(czwarty);
-		pi¹ty = new Batton(Kszta³tyRozmiary.KWADRATŒREDNI);
-		pi¹ty.putClientProperty(doIkon, 5);
-		kszt2.add(pi¹ty);
-		doRamki.add(pi¹ty);
-		szósty = new Batton(Kszta³tyRozmiary.KWADRATMA£Y);
-		szósty.putClientProperty(doIkon, 6);
-		kszt2.add(szósty);
-		doRamki.add(szósty);
-		doRamki.setBorder(BorderFactory.createTitledBorder("Wybór kszta³tu"));
-		kszt.add(doRamki);
-		doRamki.setLayout(new GridLayout(2,3));
-		JPanel funkcyjny = new JPanel();
-		wszystko = new Batton2();
-		funkcyjny.add(wszystko);
-		ostatni = new Batton2("ostatniego");
-		funkcyjny.add(ostatni);
-		gumka = new Batton2(false);
-		funkcyjny.add(gumka);
-		funkcyjny.setBorder(BorderFactory.createTitledBorder("Klawisze funkcyjne"));
-		kszt.add(funkcyjny);
-		kszt.setLayout(new GridLayout(1,0));
-		this.add(kszt);
-		setLayout(gbl);
-		this.setForeground(Color.LIGHT_GRAY);
-		repaint();
-	}
+	
 	
 	@Override
 	public void paintComponent(Graphics g) {
@@ -199,7 +51,7 @@ public class Panel extends JPanel implements Printable{
         rysujKartê(pêdzel);
         if(loaded!=null){ rysujWczytany(pêdzel);}
         pêdzel.setComposite(ac);
-        rysujKszta³t(pêdzel);  
+        rysujKszta³t(pêdzel);
 	}
 	
 	@Override
@@ -217,7 +69,7 @@ public class Panel extends JPanel implements Printable{
 	}
 
 	public Color returnCurrentColor(){
-		return zmieniony;
+		return Panel2.zmieniony;
 	}
 		
 
@@ -263,115 +115,184 @@ public class Panel extends JPanel implements Printable{
 				}
 			}
 		}
+
+
+@Override
+public void mouseDragged(MouseEvent e){
+	isDragged = true;
+	if (SwingUtilities.isLeftMouseButton(e)) {
+		switch(Batton.aktivBatton){
+		case 1:
+			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
+			if(zbiórZnaków.size()>=5){
+				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
+			}
+			repaint();
+		break;
+		case 2:
+			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
+			if(zbiórZnaków.size()>=5){
+				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
+			}
+			repaint();
+		break;
+		case 3:
+			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
+			if(zbiórZnaków.size()>=5){
+				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
+			}
+			repaint();
+		break;
+		case 4:
+			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
+			if(zbiórZnaków.size()>=5){
+				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
+			}
+			repaint();
+		break;
+		case 5:
+			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
+			if(zbiórZnaków.size()>=5){
+				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
+			}
+			repaint();
+		break;
+		case 6:
+			
+			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
+			if(zbiórZnaków.size()>=5){
+				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
+			}
+			repaint();
+		break;
+		default:
+			JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
+		}
+		Panel2.wszystko.validateEna();
+		Panel2.ostatni.validateEna();
+	}
+	isDragged = false;
+	iters = 0;
+}
+
+@Override
+public void mouseMoved(MouseEvent arg0) {
+	// TODO Auto-generated method stub
 	
-	
-class ChEv implements ChangeListener{
+}
+
+
 	@Override
-	public void stateChanged(ChangeEvent ch){
-		if(gumka.checkIfActive==true){
-			gumka.checkIfActive = false;
-			gumka.setBackground(wszystko.getBackground());
-		}
-		zmieniony = czuzer.getColor();
-		System.out.println(zmieniony);
-		}
+	public void mouseClicked(MouseEvent e){
+		if(e.getButton()==MouseEvent.BUTTON1){
+			switch(Batton.aktivBatton){
+			case 1:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£ODU¯E,returnCurrentColor()));
+				repaint(e.getX()-5, e.getY()-5, 15, 15);
+			break;
+			case 2:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
+				repaint(e.getX()-5, e.getY()-5, 10, 10);
+			break;
+			case 3:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
+				repaint(e.getX()-5, e.getY()-5, 5, 5);
+			break;
+			case 4:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
+				repaint(e.getX()-5, e.getY()-5, 15, 15);
+			break;
+			case 5:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
+				repaint(e.getX()-5, e.getY()-5, 10, 10);
+			break;
+			case 6:
+				zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATMA£Y,returnCurrentColor()));
+				repaint(e.getX()-5, e.getY()-5, 5, 5);
+			break;
+			default:
+				JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
+			}
+		}	
+		Panel2.wszystko.validateEna();
+		Panel2.ostatni.validateEna();
 	}
 
-class Batton2 extends JButton{
+@Override
+public void mouseEntered(MouseEvent arg0) {
+	// TODO Auto-generated method stub
 	
-	boolean checkIfActive;
-	
-	public Batton2(){
-		super("<html><center><b><font color=red>Wyczyœæ<br>ca³¹<br>kartê</font></b></center></html>");
-		setMinimumSize(new Dimension(80,80));
-		setPreferredSize(new Dimension(80,80));
-		setMaximumSize(new Dimension(80,80));
-		validateEna();
-		addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				zbiórZnaków.clear();
-				validateEna();
-				ostatni.validateEna();
-				loaded = null;
-				Ramka.kartka.repaint();
-			}
-		});
-	}
-	public Batton2(String str){
-		super("<html><center><b><font color=red>Cofnij<br>ostatni<br>znak</font></b></center></html>");
-		setMinimumSize(new Dimension(80,80));
-		setPreferredSize(new Dimension(80,80));
-		setMaximumSize(new Dimension(80,80));
-		validateEna();
-		addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				Znacznik z = zbiórZnaków.get(zbiórZnaków.size()-1);
-				zbiórZnaków.remove(zbiórZnaków.size()-1);
-				validateEna();
-				wszystko.validateEna();
-				switch(z.getShape()){
-					case KWADRATDU¯Y:
-						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,15,15);
-						break;
-					case KWADRATŒREDNI:
-						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,10,10);
-						break;
-					case KWADRATMA£Y:
-						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,5,5);
-						break;
-					case KO£ODU¯E:
-						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,15,15);
-						break;
-					case KO£OŒREDNIE:
-						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,10,10);
-						break;
-					case KO£OMA£E:
-						Ramka.kartka.repaint((int) z.getX()-5,(int) z.getY()-5,5,5);
-						break;
-					default:
-						System.out.println("What the fook?");
-				}
-				
-			}
-	});
 }
-	public Batton2(boolean b){
-		super("<html><center><b><font color=red>Wyma¿</font></b></center></html>");
-		setMinimumSize(new Dimension(80,80));
-		setPreferredSize(new Dimension(80,80));
-		setMaximumSize(new Dimension(80,80));
-		checkIfActive = b;
-		addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e){
-				if(checkIfActive==false){
-					zmieniony = new Color(255,255,255);
-					checkIfActive=true;
-					gumka.setBackground(Color.YELLOW);
-					gumka.repaint();
-				}
-				else{
-					zmieniony = czuzer.getColor();
-					checkIfActive = false;
-					Color doZmiany = wszystko.getBackground();
-					gumka.setBackground(doZmiany);
-					gumka.repaint();
-				}
-			}
-	});
-}
-	
-	private void validateEna(){
-		if(zbiórZnaków.size()<=0)
-			setEnabled(false);
-		else
-			setEnabled(true);
-	}
 
+@Override
+public void mouseExited(MouseEvent arg0) {
+	// TODO Auto-generated method stub
+	
 }
+
+@Override
+public void mousePressed(MouseEvent arg0) {
+	// TODO Auto-generated method stub
+	
 }
+
+@Override
+public void mouseReleased(MouseEvent arg0) {
+	// TODO Auto-generated method stub
+	
+}
+@Override
+public Dimension getPreferredSize() {
+    if (loaded == null) {
+        return new Dimension();
+    } else {
+        return new Dimension(loaded.getWidth(), loaded.getHeight());
+    }
+}
+public void createMissingZ(Znacznik last, Znacznik predecessor){
+	if(true){
+		if(last.getX()>(predecessor.getX()+1)){
+			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
+			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
+			middle(middle);
+		}
+		else if(last.getX()<(predecessor.getX()+2)){
+			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
+			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
+			middle(middle);
+		}
+		else if(last.getY()>(predecessor.getY()+2)){
+			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
+			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
+			middle(middle);
+		}
+		else if(last.getY()<(predecessor.getY()+2)){
+			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
+			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
+			middle(middle);
+		}
+	}
+	}
+public void middle(Znacznik middle){
+	int equi = zbiórZnaków.lastIndexOf(middle);
+	Znacznik leftHand = new Znacznik((zbiórZnaków.get(equi-1).getX()+middle.getX())/2, (zbiórZnaków.get(equi-1).getY()+middle.getY())/2, middle.getShape(), Color.BLUE);
+	Znacznik rightHand = new Znacznik((zbiórZnaków.get(equi+1).getX()+middle.getX())/2, (zbiórZnaków.get(equi+1).getY()+middle.getY())/2, middle.getShape(), Color.BLUE);
+	zbiórZnaków.add(equi+1, rightHand);
+	zbiórZnaków.add(equi-1, leftHand);
+	int leftInd = zbiórZnaków.lastIndexOf(leftHand);
+	int rightInd = zbiórZnaków.lastIndexOf(rightHand);
+	Znacznik leftLeft = new Znacznik((zbiórZnaków.get(leftInd-1).getX()+leftHand.getX())/2, (zbiórZnaków.get(leftInd-1).getY()+leftHand.getY())/2, middle.getShape(), Color.BLUE);
+	Znacznik leftRight = new Znacznik((zbiórZnaków.get(leftInd+1).getX()+leftHand.getX())/2, (zbiórZnaków.get(leftInd+1).getY()+leftHand.getY())/2, middle.getShape(), Color.BLUE);
+	Znacznik rightLeft = new Znacznik((zbiórZnaków.get(rightInd-1).getX()+rightHand.getX())/2, (zbiórZnaków.get(rightInd-1).getY()+rightHand.getY())/2, middle.getShape(), Color.BLUE);
+	Znacznik rightRight = new Znacznik((zbiórZnaków.get(rightInd+1).getX()+rightHand.getX())/2, (zbiórZnaków.get(rightInd+1).getY()+rightHand.getY())/2, middle.getShape(), Color.BLUE);
+	zbiórZnaków.add(rightInd+1, rightRight);
+	zbiórZnaków.add(rightInd-1, rightLeft);
+	zbiórZnaków.add(leftInd+1, leftRight);
+	zbiórZnaków.add(leftInd-1, leftLeft);
+	}
+}
+
+
 
 
 

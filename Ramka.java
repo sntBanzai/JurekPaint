@@ -28,12 +28,14 @@ public class Ramka extends JFrame {
 	JFileChooser jfc = new JFileChooser();
 	FileFilter filter = new FileNameExtensionFilter("Pliki .jpg, .bmp oraz .gif", "jpg", "bmp","gif");
 	Container uk³ad;
-	Panel odMenusów;
+	static Panel2 odMenusów;
+	public static JScrollPane lupa;
 	
 	public Ramka(){
 		super("JurekPaint");
 		setPreferredSize(new Dimension(1550,1050));
 		uk³ad = new Container();
+		uk³ad.setLayout(new BorderLayout());
 		menuBar = new JMenuBar();
 		JMenu plik = new JMenu("Plik");
 		plik.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -110,11 +112,14 @@ public class Ramka extends JFrame {
 		info.add(oProg);
 		menuBar.add(info);
 		menuBar.setVisible(true);
-		uk³ad.add(menuBar);
+		uk³ad.add(menuBar, BorderLayout.PAGE_START);
 		kartka = new Panel();
-		uk³ad.add(kartka);
-		odMenusów = new Panel("wyrko");
-		uk³ad.add(odMenusów);
+		lupa = new JScrollPane(kartka);
+		lupa.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+		lupa.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		uk³ad.add(lupa, BorderLayout.CENTER);
+		odMenusów = new Panel2();
+		uk³ad.add(odMenusów, BorderLayout.PAGE_END);
 		add(uk³ad);
 		setVisible(true);
 		pack();

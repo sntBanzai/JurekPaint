@@ -1,5 +1,7 @@
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedWriter;
@@ -38,6 +40,7 @@ public class LoadSaveEngine {
 			e.printStackTrace();
 		}
 		where.loaded = internal;
+		where.revalidate();
 		where.repaint();
 		where.zbiórZnaków.clear();
 	}
