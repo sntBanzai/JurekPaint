@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Set;
 import java.awt.event.*;
@@ -30,7 +31,8 @@ public class Panel extends JPanel implements Printable, MouseListener, MouseMoti
 	public static BufferedImage loaded;
 	static AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
 	boolean isDragged = false;
-	int iters = 0;
+	int iters1 = 0;
+	int iters2 = 0;
 	
 	static ArrayList<Znacznik> zbiórZnaków = new ArrayList<Znacznik>();
 	
@@ -127,35 +129,35 @@ public void mouseDragged(MouseEvent e){
 			if(zbiórZnaków.size()>=5){
 				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
 			}
-			repaint();
+			repaint(e.getX()-5, e.getY()-5, 15, 15);
 		break;
 		case 2:
 			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OŒREDNIE,returnCurrentColor()));
 			if(zbiórZnaków.size()>=5){
 				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
 			}
-			repaint();
+			repaint(e.getX()-5, e.getY()-5, 10, 10);
 		break;
 		case 3:
 			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KO£OMA£E,returnCurrentColor()));
 			if(zbiórZnaków.size()>=5){
 				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
 			}
-			repaint();
+			repaint(e.getX()-5, e.getY()-5, 5, 5);
 		break;
 		case 4:
 			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATDU¯Y,returnCurrentColor()));
 			if(zbiórZnaków.size()>=5){
 				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
 			}
-			repaint();
+			repaint(e.getX()-5, e.getY()-5, 15, 15);
 		break;
 		case 5:
 			zbiórZnaków.add(new Znacznik(e.getX(),e.getY(),Kszta³tyRozmiary.KWADRATŒREDNI,returnCurrentColor()));
 			if(zbiórZnaków.size()>=5){
 				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
 			}
-			repaint();
+			repaint(e.getX()-5, e.getY()-5, 10, 10);
 		break;
 		case 6:
 			
@@ -163,7 +165,7 @@ public void mouseDragged(MouseEvent e){
 			if(zbiórZnaków.size()>=5){
 				createMissingZ(zbiórZnaków.get(zbiórZnaków.size()-1), zbiórZnaków.get(zbiórZnaków.size()-2));
 			}
-			repaint();
+			repaint(e.getX()-5, e.getY()-5, 5, 5);
 		break;
 		default:
 			JOptionPane.showMessageDialog(null,"Najpierw wybierz kszta³t znacznika!");
@@ -172,7 +174,6 @@ public void mouseDragged(MouseEvent e){
 		Panel2.ostatni.validateEna();
 	}
 	isDragged = false;
-	iters = 0;
 }
 
 @Override
@@ -250,46 +251,38 @@ public Dimension getPreferredSize() {
     }
 }
 public void createMissingZ(Znacznik last, Znacznik predecessor){
-	if(true){
-		if(last.getX()>(predecessor.getX()+1)){
-			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
-			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
-			middle(middle);
+	int x1 = last.getX();
+	int y1 = last.getY();
+	int x2 = predecessor.getX();
+	int y2 = predecessor.getY();
+	System.out.println(x1+" "+y1+" "+x2+" "+y2);
+	if(((Math.abs(y1-y2))>=1)){
+		double a = (((double)y2-(double)y1)/((double)x2-(double)x1));
+		double b = y1 -a*x1;
+		System.out.println("a: "+a+" b: "+b);
+		int absX = Math.abs(x1-x2);
+		if(x1>x2){
+			for(int i = 0; i<absX; i++){
+				int newX = x2 + i;
+				int newY = (int) Math.floor(a*newX+b);
+				System.out.println("newY: "+newY);
+				zbiórZnaków.add(zbiórZnaków.lastIndexOf(last), new Znacznik(newX, newY, last.getShape(), last.getColor()));
+				repaint(newX-5, newY-5, 15, 15);
+			}
 		}
-		else if(last.getX()<(predecessor.getX()+2)){
-			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
-			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
-			middle(middle);
-		}
-		else if(last.getY()>(predecessor.getY()+2)){
-			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
-			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
-			middle(middle);
-		}
-		else if(last.getY()<(predecessor.getY()+2)){
-			Znacznik middle = new Znacznik((int)(last.getX()+predecessor.getX())/2, (int)(last.getY()+predecessor.getY())/2,last.getShape(), Color.RED);
-			zbiórZnaków.add(zbiórZnaków.size()-2, middle);
-			middle(middle);
-		}
+		else if(x1<x2){
+			for(int i = 0; i<absX; i++){
+				int newX = x1 + i;
+				int newY = (int) Math.floor(a*newX+b);
+				System.out.println("newY: "+newY);
+				zbiórZnaków.add(zbiórZnaków.lastIndexOf(last), new Znacznik(newX, newY, last.getShape(), last.getColor()));
+				repaint(newX-5, newY-5, 15, 15);
+			}
 	}
 	}
-public void middle(Znacznik middle){
-	int equi = zbiórZnaków.lastIndexOf(middle);
-	Znacznik leftHand = new Znacznik((zbiórZnaków.get(equi-1).getX()+middle.getX())/2, (zbiórZnaków.get(equi-1).getY()+middle.getY())/2, middle.getShape(), Color.BLUE);
-	Znacznik rightHand = new Znacznik((zbiórZnaków.get(equi+1).getX()+middle.getX())/2, (zbiórZnaków.get(equi+1).getY()+middle.getY())/2, middle.getShape(), Color.BLUE);
-	zbiórZnaków.add(equi+1, rightHand);
-	zbiórZnaków.add(equi-1, leftHand);
-	int leftInd = zbiórZnaków.lastIndexOf(leftHand);
-	int rightInd = zbiórZnaków.lastIndexOf(rightHand);
-	Znacznik leftLeft = new Znacznik((zbiórZnaków.get(leftInd-1).getX()+leftHand.getX())/2, (zbiórZnaków.get(leftInd-1).getY()+leftHand.getY())/2, middle.getShape(), Color.BLUE);
-	Znacznik leftRight = new Znacznik((zbiórZnaków.get(leftInd+1).getX()+leftHand.getX())/2, (zbiórZnaków.get(leftInd+1).getY()+leftHand.getY())/2, middle.getShape(), Color.BLUE);
-	Znacznik rightLeft = new Znacznik((zbiórZnaków.get(rightInd-1).getX()+rightHand.getX())/2, (zbiórZnaków.get(rightInd-1).getY()+rightHand.getY())/2, middle.getShape(), Color.BLUE);
-	Znacznik rightRight = new Znacznik((zbiórZnaków.get(rightInd+1).getX()+rightHand.getX())/2, (zbiórZnaków.get(rightInd+1).getY()+rightHand.getY())/2, middle.getShape(), Color.BLUE);
-	zbiórZnaków.add(rightInd+1, rightRight);
-	zbiórZnaków.add(rightInd-1, rightLeft);
-	zbiórZnaków.add(leftInd+1, leftRight);
-	zbiórZnaków.add(leftInd-1, leftLeft);
 	}
+
+
 }
 
 

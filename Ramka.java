@@ -48,8 +48,15 @@ public class Ramka extends JFrame {
 				jfc.setDialogTitle("Otwórz plik graficzny");
 				int returnV = jfc.showOpenDialog(Ramka.this);
 				if(returnV == jfc.APPROVE_OPTION){
-					LoadSaveEngine lse = new LoadSaveEngine(jfc.getSelectedFile());
-					lse.loadAndShow(kartka);
+					File selected = jfc.getSelectedFile();
+					String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
+					if(ext.equals("jpg")||ext.equals("bmp")||ext.equals("gif")){
+						LoadSaveEngine lse = new LoadSaveEngine(jfc.getSelectedFile());
+						lse.loadAndShow(kartka);
+					}
+					else{
+						JOptionPane.showMessageDialog(jfc, "Nieobs³ugiwany format pliku!", "B³¹d odczytu", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			}
 		});
@@ -135,7 +142,9 @@ public class Ramka extends JFrame {
 			LoadSaveEngine lse = new LoadSaveEngine(new BufferedImage(Ramka.kartka.getWidth(), Ramka.kartka.getHeight(), BufferedImage.TYPE_INT_RGB));
 			File selected = jfc.getSelectedFile();
 			String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
-			if(jfc.getSelectedFile().exists()){
+			System.out.println(ext);
+			if(ext.equals("jpg")||ext.equals("bmp")||ext.equals("gif")){
+				if(jfc.getSelectedFile().exists()){
 				String[] options = {"Tak, kurna","Nie kcem!"};
 				int  result = JOptionPane.showOptionDialog(jfc, "Niniejszy plik ju¿ istnieje. Czy chcesz go nadpisaæ?", "Agawu", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, null);
 				if(result==JOptionPane.YES_OPTION){
@@ -143,6 +152,11 @@ public class Ramka extends JFrame {
 				}
 				else{
 				savingProcess();
+				}
+			}
+			else{
+				JOptionPane.showMessageDialog(jfc, "Podano b³êdny format zapisu! U¿yj poprawnego formatu.", "B³¹d zapisu", JOptionPane.ERROR_MESSAGE);
+				 savingProcess();
 			}
 		}
 		else{
