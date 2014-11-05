@@ -102,6 +102,45 @@ public class Ramka extends JFrame {
 		plik.add(new JSeparator(JSeparator.HORIZONTAL));
 		plik.add(close);
 		menuBar.add(plik);
+		JMenu edit = new JMenu("Edycja");
+		edit.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		JMenuItem cut = new JMenuItem("Wytnij");
+		cut.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		cut.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ae){
+				
+			}
+		});
+		JMenuItem copy = new JMenuItem("Kopiuj");
+		copy.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		copy.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ae){
+				
+			}
+		});
+		JMenuItem paste = new JMenuItem("Wklej");
+		paste.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		paste.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ae){
+				
+			}
+		});
+		JMenuItem crop = new JMenuItem("Przytnij");
+		crop.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		crop.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent ae){
+				
+			}
+		});
+		edit.add(paste);
+		edit.add(copy);
+		edit.add(cut);
+		edit.add(crop);
+		menuBar.add(edit);
 		JMenu info = new JMenu("Informacje");
 		info.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		JMenuItem oProg = new JMenuItem("O programie");

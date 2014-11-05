@@ -42,7 +42,7 @@ public class LoadSaveEngine {
 		where.loaded = internal;
 		where.revalidate();
 		where.repaint();
-		where.zbiórZnaków.clear();
+		where.markerSet.clear();
 	}
 	
 	public void writeAndSave(Panel what, File where, String ext){

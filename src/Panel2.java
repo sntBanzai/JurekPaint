@@ -31,6 +31,7 @@ static String doIkon = "coœtam";
 public static Batton2 wszystko;
 public static Batton2 ostatni;
 public static Batton2 gumka;
+Batton2 areaSelectionModeButton;
 	
 	public Panel2(){
 		setLocation(0,800);
@@ -79,6 +80,8 @@ public static Batton2 gumka;
 		funkcyjny.add(ostatni);
 		gumka = new Batton2(false);
 		funkcyjny.add(gumka);
+		areaSelectionModeButton = new Batton2(4);
+		funkcyjny.add(areaSelectionModeButton);
 		funkcyjny.setBorder(BorderFactory.createTitledBorder("Klawisze funkcyjne"));
 		kszt.add(funkcyjny);
 		kszt.setLayout(new GridLayout(1,0));
@@ -93,6 +96,12 @@ public static Batton2 gumka;
 				gumka.checkIfActive = false;
 				gumka.setBackground(wszystko.getBackground());
 			}
+			if(areaSelectionModeButton.checkIfActive2 == true){
+				Ramka.kartka.areaSelectionMode = false;
+				areaSelectionModeButton.checkIfActive2 = false;
+				Panel.r2d = null;
+				areaSelectionModeButton.setBackground(wszystko.getBackground());
+			}
 			zmieniony = czuzer.getColor();
 			System.out.println(zmieniony);
 			}
@@ -101,6 +110,7 @@ public static Batton2 gumka;
 	class Batton2 extends JButton{
 		
 		boolean checkIfActive;
+		boolean checkIfActive2;
 		
 		public Batton2(){
 			super("<html><center><b><font color=red>Wyczyœæ<br>ca³¹<br>kartê</font></b></center></html>");
@@ -111,7 +121,7 @@ public static Batton2 gumka;
 			addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e){
-					Ramka.kartka.zbiórZnaków.clear();
+					Ramka.kartka.markerSet.clear();
 					validateEna();
 					ostatni.validateEna();
 					Ramka.kartka.loaded = null;
@@ -128,8 +138,8 @@ public static Batton2 gumka;
 			addActionListener(new ActionListener(){
 				@Override
 				public void actionPerformed(ActionEvent e){
-					Znacznik z = Ramka.kartka.zbiórZnaków.get(Ramka.kartka.zbiórZnaków.size()-1);
-					Ramka.kartka.zbiórZnaków.remove(Ramka.kartka.zbiórZnaków.size()-1);
+					Znacznik z = Ramka.kartka.markerSet.get(Ramka.kartka.markerSet.size()-1);
+					Ramka.kartka.markerSet.remove(Ramka.kartka.markerSet.size()-1);
 					validateEna();
 					wszystko.validateEna();
 					switch(z.getShape()){
@@ -172,6 +182,12 @@ public static Batton2 gumka;
 						checkIfActive=true;
 						gumka.setBackground(Color.YELLOW);
 						gumka.repaint();
+						checkIfActive2 = false;
+						Panel.areaSelectionMode = false;
+						Ramka.kartka.r2DClean();
+						Color doZmiany = wszystko.getBackground();
+						areaSelectionModeButton.setBackground(doZmiany);
+						areaSelectionModeButton.repaint();
 					}
 					else{
 						zmieniony = czuzer.getColor();
@@ -183,9 +199,38 @@ public static Batton2 gumka;
 				}
 		});
 	}
+		public Batton2(int g){
+			super("<html><center><b><font color=red>Zaznacz obszar</font></b></center></html>");
+			setMinimumSize(new Dimension(80,80));
+			setPreferredSize(new Dimension(80,80));
+			setMaximumSize(new Dimension(80,80));
+			checkIfActive2 = false;
+			addActionListener(new ActionListener(){
+				@Override
+				public void actionPerformed(ActionEvent e){
+					if(checkIfActive2==false){
+						Panel.areaSelectionMode = true;
+						checkIfActive2=true;
+						areaSelectionModeButton.setBackground(Color.YELLOW);
+						areaSelectionModeButton.repaint();
+						checkIfActive = false;
+						gumka.setBackground(wszystko.getBackground());
+						gumka.repaint();
+					}
+					else{
+						Panel.areaSelectionMode = false;
+						checkIfActive2 = false;
+						Ramka.kartka.r2DClean();
+						Color doZmiany = wszystko.getBackground();
+						areaSelectionModeButton.setBackground(doZmiany);
+						areaSelectionModeButton.repaint();
+					}
+				}
+		});
+		}
 		
 		public void validateEna(){
-			if(Ramka.kartka.zbiórZnaków.size()<=0)
+			if(Ramka.kartka.markerSet.size()<=0)
 				setEnabled(false);
 			else
 				setEnabled(true);
