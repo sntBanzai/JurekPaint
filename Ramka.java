@@ -21,6 +21,7 @@ import javax.swing.filechooser.*;
 import javax.swing.*;
 
 
+
 public class Ramka extends JFrame {
 	
 	public static Panel kartka;
@@ -44,13 +45,19 @@ public class Ramka extends JFrame {
 		open.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ae){
+				if(kartka.areaSelectionMode == true){
+					kartka.areaSelectionMode = false;
+					kartka.dragNDrop = false;
+					odMenusów.areaSelectionModeButton.setBackground(odMenusów.wszystko.getBackground());
+					odMenusów.areaSelectionModeButton.repaint();
+				}
 				jfc.setFileFilter(filter);
 				jfc.setDialogTitle("Otwórz plik graficzny");
 				int returnV = jfc.showOpenDialog(Ramka.this);
 				if(returnV == jfc.APPROVE_OPTION){
 					File selected = jfc.getSelectedFile();
 					String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
-					if(ext.equals("jpg")||ext.equals("bmp")||ext.equals("gif")){
+					if(ext.equals("jpg")||ext.equals("bmp")||ext.equals("gif")||ext.equals("JPG")||ext.equals("BMP")||ext.equals("GIF")){
 						LoadSaveEngine lse = new LoadSaveEngine(jfc.getSelectedFile());
 						lse.loadAndShow(kartka);
 					}
@@ -133,7 +140,19 @@ public class Ramka extends JFrame {
 		crop.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ae){
-				
+				if(kartka.areaSelectionMode == true){
+					BufferedImage crop = new BufferedImage(kartka.getWidth(), kartka.getHeight(), BufferedImage.TYPE_INT_RGB);
+					kartka.paintAll(crop.createGraphics());
+					kartka.loaded = crop.getSubimage((int) kartka.r2d.getX(), (int)kartka.r2d.getY(), (int)kartka.r2d.getWidth(), (int)kartka.r2d.getHeight());
+					kartka.markerSet.clear();
+					kartka.repaint();
+					kartka.areaSelectionMode = false;
+					odMenusów.areaSelectionModeButton.setBackground(odMenusów.wszystko.getBackground());
+					odMenusów.areaSelectionModeButton.repaint();
+				}
+				else{
+					JOptionPane.showMessageDialog(kartka, "Brak zaznaczonego obszaru do przyciêcia!", "B³¹d operacji", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		edit.add(paste);
@@ -181,7 +200,6 @@ public class Ramka extends JFrame {
 			LoadSaveEngine lse = new LoadSaveEngine(new BufferedImage(Ramka.kartka.getWidth(), Ramka.kartka.getHeight(), BufferedImage.TYPE_INT_RGB));
 			File selected = jfc.getSelectedFile();
 			String ext = selected.getPath().substring(selected.getPath().lastIndexOf(".")+1, selected.getPath().length());
-			System.out.println(ext);
 			if(ext.equals("jpg")||ext.equals("bmp")||ext.equals("gif")){
 				if(jfc.getSelectedFile().exists()){
 				String[] options = {"Tak, kurna","Nie kcem!"};

@@ -99,7 +99,8 @@ Batton2 areaSelectionModeButton;
 			if(areaSelectionModeButton.checkIfActive2 == true){
 				Ramka.kartka.areaSelectionMode = false;
 				areaSelectionModeButton.checkIfActive2 = false;
-				Panel.r2d = null;
+				Ramka.kartka.dragNDrop = false;
+				Ramka.kartka.r2DClean();;
 				areaSelectionModeButton.setBackground(wszystko.getBackground());
 			}
 			zmieniony = czuzer.getColor();
@@ -182,8 +183,9 @@ Batton2 areaSelectionModeButton;
 						checkIfActive=true;
 						gumka.setBackground(Color.YELLOW);
 						gumka.repaint();
-						checkIfActive2 = false;
+						areaSelectionModeButton.checkIfActive2 = false;
 						Panel.areaSelectionMode = false;
+						Panel.dragNDrop = false;
 						Ramka.kartka.r2DClean();
 						Color doZmiany = wszystko.getBackground();
 						areaSelectionModeButton.setBackground(doZmiany);
@@ -213,17 +215,19 @@ Batton2 areaSelectionModeButton;
 						checkIfActive2=true;
 						areaSelectionModeButton.setBackground(Color.YELLOW);
 						areaSelectionModeButton.repaint();
-						checkIfActive = false;
+						gumka.checkIfActive = false;
 						gumka.setBackground(wszystko.getBackground());
 						gumka.repaint();
 					}
 					else{
 						Panel.areaSelectionMode = false;
+						Panel.dragNDrop = false;
 						checkIfActive2 = false;
 						Ramka.kartka.r2DClean();
 						Color doZmiany = wszystko.getBackground();
 						areaSelectionModeButton.setBackground(doZmiany);
 						areaSelectionModeButton.repaint();
+						zmieniony = czuzer.getColor();
 					}
 				}
 		});
