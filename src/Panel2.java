@@ -125,7 +125,7 @@ Batton2 areaSelectionModeButton;
 					Ramka.kartka.markerSet.clear();
 					validateEna();
 					ostatni.validateEna();
-					Ramka.kartka.loaded = null;
+					Ramka.kartka.loaded.clear();
 					Ramka.kartka.repaint();
 				}
 			});

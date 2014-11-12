@@ -29,7 +29,8 @@ import java.awt.print.Printable;
 public class Panel extends JPanel implements Printable, MouseListener, MouseMotionListener{
 
 	public static Graphics2D pêdzel;
-	public static BufferedImage loaded;
+	public static ArrayList<BufferedImage> loaded = new ArrayList<BufferedImage>();
+	int loadedCounter = 0;
 	static AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER);
 	boolean isDragged = false;
 	static boolean areaSelectionMode = false;
@@ -42,6 +43,8 @@ public class Panel extends JPanel implements Printable, MouseListener, MouseMoti
 	BufferedImage floatable;
 	BufferedImage fCopy;
 	
+	static ArrayList<Rectangle> cutAreas = new ArrayList<Rectangle>();
+	static ArrayList<BufferedImage> floated = new ArrayList<BufferedImage>();
 	static ArrayList<Znacznik> markerSet = new ArrayList<Znacznik>();
 	
 	public Panel(){
@@ -60,10 +63,12 @@ public class Panel extends JPanel implements Printable, MouseListener, MouseMoti
         pêdzel = (Graphics2D) g;
         rysujKartê(pêdzel);
         if(loaded!=null){ rysujWczytany(pêdzel);}
+        if(cutAreas.size()>0) eraseWhatWasCut(cutAreas, pêdzel);
         pêdzel.setComposite(ac);
         rysujKszta³t(pêdzel);
         if(areaSelectStartingP.getX()!=this.getWidth()&&areaSelectStartingP.getY()!=this.getHeight()) drawSelectionArea(pêdzel, me);
         if(dragNDrop==true) rysujWyciety(pêdzel);
+        
 	}
 	
 	@Override
@@ -83,14 +88,20 @@ public class Panel extends JPanel implements Printable, MouseListener, MouseMoti
 	public Color returnCurrentColor(){
 		return Panel2.zmieniony;
 	}
-		
+	
+	public int getLoadedCount(){
+		return loadedCounter;
+	}
 
 	public void rysujWczytany(Graphics2D pêdzel){
-		pêdzel.drawImage(loaded, 0, 0, null);
+		for(int i = 0; i<loaded.size(); i++){
+			pêdzel.drawImage(loaded.get(i), 0, 0, null);
+			pêdzel.setComposite(ac);
+		}
 	}
 	
 	public void rysujWyciety(Graphics2D brush){
-		brush.drawImage(floatable, (int)r2d.getX(), (int)r2d.getY(), null);
+		brush.drawImage(floated.get(floated.size()-1), (int)r2d.getX(), (int)r2d.getY(), this);
 	}
 	
 	public void rysujKartê(Graphics2D pêdzel){
@@ -103,11 +114,45 @@ public class Panel extends JPanel implements Printable, MouseListener, MouseMoti
 			r2d = new Rectangle((int) areaSelectStartingP.getX(), (int) areaSelectStartingP.getY(), (me.getX()-(int) areaSelectStartingP.getX()), (me.getY()-(int) areaSelectStartingP.getY()));
 			brush.draw(r2d);
 			ast.start();
-			
 		}
 		else{
 			r2DClean();
 			repaint();
+		}
+	}
+	
+	public void eraseWhatWasCut(ArrayList<Rectangle> ar, Graphics2D brush){
+		for(int i = 0; i<cutAreas.size(); i++){
+			Rectangle r = cutAreas.get(i);
+			brush.setColor(Color.WHITE);
+			brush.fillRect((int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight());
+		}
+	}
+	
+	public void deleteCutZnaczniks(Rectangle rec){
+		ArrayList<Integer> obsoleteZnaczniks = new ArrayList<Integer>();
+		for(int i = 0; i<markerSet.size(); i++){
+			Point extracted = new Point((int)markerSet.get(i).getX(), (int)markerSet.get(i).getY());
+			System.out.println(extracted);
+			Rectangle recUpg = new Rectangle((int)(rec.getX()-5), (int)(rec.getY()-5), (int)(rec.getWidth()+10), (int)(rec.getHeight()+10));
+			if(recUpg.contains(extracted)){
+				obsoleteZnaczniks.add(i);
+			}
+		}
+		for(int i= obsoleteZnaczniks.size()-1; i>=0; i--){
+			int indexExtracted = obsoleteZnaczniks.get(i);
+			markerSet.remove(indexExtracted);
+		}
+	}
+	
+	@Override
+	public Dimension getPreferredSize(){
+		if(loaded.size()==0){
+			return new Dimension();
+		}
+		else{
+			BufferedImage first = loaded.get(0);
+			return new Dimension(first.getWidth(), first.getHeight());
 		}
 	}
 	
@@ -218,10 +263,25 @@ public void mouseDragged(MouseEvent e){
 		if(SwingUtilities.isLeftMouseButton(e)){
 			me = e;
 			repaint();
+			fCopy = null;
+			fCopy = new BufferedImage((int)this.getWidth(), (int)this.getHeight(), BufferedImage.TYPE_INT_RGB);
+			this.paintAll(fCopy.getGraphics());
+			floatable = null;
+			floatable = fCopy.getSubimage((int)r2d.getX()+1, (int)r2d.getY()+1, (int)r2d.getWidth(), (int)r2d.getHeight());
+			floated.clear();
+			Graphics gie = floatable.getGraphics();
+			gie.drawImage(fCopy, 0, 0, null);
+			floated.add(floatable);
 		}
-		else if(SwingUtilities.isRightMouseButton(e)&&dragNDrop==true){
-			r2d.translate((int)r2d.getX() - e.getX(), (int)r2d.getY() - e.getY());
-			repaint();
+		else if(SwingUtilities.isRightMouseButton(e)){
+			Point grip = new Point(e.getPoint());
+			if(r2d.contains(grip))dragNDrop = true;
+			if(dragNDrop==true){
+				r2d.setLocation(e.getX()-(int)(r2d.getWidth()/2), e.getY()-(int)(r2d.getHeight()/2));
+				System.out.println(e.getX());
+				System.out.println(e.getY());
+				repaint();
+			}
 		}
 	}
 }
@@ -293,20 +353,7 @@ public void mousePressed(MouseEvent arg0) {
 		areaSelectStartingP.x = arg0.getX();
 		areaSelectStartingP.y = arg0.getY();
 	}
-	else if(areaSelectionMode==true&&SwingUtilities.isRightMouseButton(arg0)){
-		Point grip = new Point(arg0.getPoint());
-		if(r2d.contains(grip)){
-			dragNDrop = true;
-			fCopy = null;
-			fCopy = new BufferedImage((int)this.getWidth(), (int)this.getHeight(), BufferedImage.TYPE_INT_RGB);
-			this.paintAll(fCopy.getGraphics());
-			fCopy = fCopy.getSubimage((int)r2d.getX(), (int)r2d.getY(), (int)r2d.getWidth(), (int)r2d.getHeight());
-			floatable = null;
-			floatable = new BufferedImage(fCopy.getWidth(), fCopy.getHeight(), BufferedImage.TYPE_INT_RGB);
-			Graphics gie = floatable.getGraphics();
-			gie.drawImage(fCopy, 0, 0, null);
-		}
-	}
+
 }
 
 @Override
@@ -314,19 +361,15 @@ public void mouseReleased(MouseEvent arg0) {
 	if(isDragged==true&&SwingUtilities.isLeftMouseButton(arg0)){
 		isDragged = false;
 	}
+	else if(areaSelectionMode==true&&SwingUtilities.isLeftMouseButton(arg0)){
+		
+	}
 	else if(SwingUtilities.isRightMouseButton(arg0)){
 		System.out.println("im in");
 		dragNDrop = false;
 	}
 }
-@Override
-public Dimension getPreferredSize() {
-    if (loaded == null) {
-        return new Dimension();
-    } else {
-        return new Dimension(loaded.getWidth(), loaded.getHeight());
-    }
-}
+
 public void createMissingZ(Znacznik last, Znacznik predecessor){
 	int x1 = last.getX();
 	int y1 = last.getY();
@@ -381,9 +424,7 @@ class AreaSTimer extends Timer{
 	}
 }
 
-class Clipper extends Rectangle implements MouseListener, MouseMotionListener{
-	
-}
+
 
 }
 

@@ -10,12 +10,17 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.filechooser.*;
 import javax.swing.*;
@@ -31,6 +36,8 @@ public class Ramka extends JFrame {
 	Container uk³ad;
 	static Panel2 odMenusów;
 	public static JScrollPane lupa;
+	Clipboard clp = Toolkit.getDefaultToolkit().getSystemClipboard();
+	DataFlavor df = DataFlavor.imageFlavor;
 	
 	public Ramka(){
 		super("JurekPaint");
@@ -116,7 +123,16 @@ public class Ramka extends JFrame {
 		cut.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ae){
-				
+				if(kartka.areaSelectionMode==true){
+					BufferedImage bi = new BufferedImage(kartka.getWidth(), kartka.getHeight(), BufferedImage.TYPE_INT_RGB);
+					kartka.paintAll(bi.getGraphics());
+					BufferedImage bis = bi.getSubimage((int)kartka.r2d.getX(), (int)kartka.r2d.getY(), (int)kartka.r2d.getWidth(), (int)kartka.r2d.getHeight());
+					TransferableBI tbi = new TransferableBI(bis);
+					clp.setContents(tbi, null);
+					kartka.cutAreas.add((Rectangle)kartka.r2d.clone());
+					kartka.deleteCutZnaczniks(kartka.r2d);
+					kartka.repaint();
+				}
 			}
 		});
 		JMenuItem copy = new JMenuItem("Kopiuj");
@@ -124,7 +140,13 @@ public class Ramka extends JFrame {
 		copy.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ae){
-				
+				if(kartka.areaSelectionMode==true){
+					BufferedImage bi = new BufferedImage(kartka.getWidth(), kartka.getHeight(), BufferedImage.TYPE_INT_RGB);
+					kartka.paintAll(bi.getGraphics());
+					BufferedImage bis = bi.getSubimage((int)kartka.r2d.getX(), (int)kartka.r2d.getY(), (int)kartka.r2d.getWidth(), (int)kartka.r2d.getHeight());
+					TransferableBI tbi = new TransferableBI(bis);
+					clp.setContents(tbi, null);
+				}
 			}
 		});
 		JMenuItem paste = new JMenuItem("Wklej");
@@ -132,7 +154,21 @@ public class Ramka extends JFrame {
 		paste.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent ae){
-				
+				if(clp.isDataFlavorAvailable(df)){
+					try{
+						kartka.loaded.add((BufferedImage) clp.getData(df));
+						kartka.repaint();
+					}
+					catch(UnsupportedFlavorException ufe){
+						System.out.println("W schowku znajduj¹ siê dane w nieodpowiednim formacie!");
+					}
+					catch(IOException ioe){
+						System.out.println("B³¹d wejœcia-wyjœcia.");
+					}
+				}
+				else{
+					JOptionPane.showMessageDialog(kartka, "W schowku brak obrazu do wklejenia!", "B³¹d odczytu", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		JMenuItem crop = new JMenuItem("Przytnij");
@@ -143,7 +179,9 @@ public class Ramka extends JFrame {
 				if(kartka.areaSelectionMode == true){
 					BufferedImage crop = new BufferedImage(kartka.getWidth(), kartka.getHeight(), BufferedImage.TYPE_INT_RGB);
 					kartka.paintAll(crop.createGraphics());
-					kartka.loaded = crop.getSubimage((int) kartka.r2d.getX(), (int)kartka.r2d.getY(), (int)kartka.r2d.getWidth(), (int)kartka.r2d.getHeight());
+					kartka.loaded.clear();
+					kartka.loadedCounter = 0;
+					kartka.loaded.add(crop.getSubimage((int) kartka.r2d.getX(), (int)kartka.r2d.getY(), (int)kartka.r2d.getWidth(), (int)kartka.r2d.getHeight()));
 					kartka.markerSet.clear();
 					kartka.repaint();
 					kartka.areaSelectionMode = false;
@@ -221,4 +259,41 @@ public class Ramka extends JFrame {
 		}
 	}
 	}
+	
+class TransferableBI implements Transferable{
+	
+	BufferedImage img;
+	
+	public TransferableBI(BufferedImage img){
+		this.img = img;
+	}
+
+	@Override
+	public Object getTransferData(DataFlavor arg0)
+			throws UnsupportedFlavorException, IOException {
+		if(arg0.equals(getTransferDataFlavors()[0])){
+			return img;
+		}
+		else{
+			throw new UnsupportedFlavorException(arg0);
+		}
+	}
+
+	@Override
+	public DataFlavor[] getTransferDataFlavors() {
+		DataFlavor[] smaczek = {DataFlavor.imageFlavor};
+		return smaczek;
+	}
+
+	@Override
+	public boolean isDataFlavorSupported(DataFlavor arg0) {
+		if(arg0.equals(getTransferDataFlavors()[0])){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+}
 }

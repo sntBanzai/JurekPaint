@@ -39,7 +39,8 @@ public class LoadSaveEngine {
 			System.out.println("Du¿y problem z metod¹ write and save");
 			e.printStackTrace();
 		}
-		where.loaded = internal;
+		where.loaded.add(internal);
+		where.loadedCounter++;
 		where.revalidate();
 		where.repaint();
 		where.markerSet.clear();
